@@ -5,7 +5,7 @@ import "../CSS/Home.css";
 function Home() {
   const jogos = [
     { id: 1, nome: "Geometric Trash" },
-    { id: 2, nome: "Roblox" },
+    { id: 2, nome: "      Roblox     " },
     { id: 3, nome: "Fireboy & Watergirl" },
   ];
   const [searchQuery, setSearchQuery] = useState("");
