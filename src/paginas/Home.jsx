@@ -55,7 +55,13 @@ function Home() {
 
       <div className="gridJogos">
         {filteredJogos.length > 0 ? (
-          filteredJogos.map((jogo) => <CardJogo jogo={jogo} key={jogo.id} />)
+          filteredJogos.map((jogo) => (
+            <CardJogo
+              jogo={jogo}
+              key={jogo.id}
+              onClick={() => <Link to="/jogo"></Link>}
+            />
+          ))
         ) : (
           <div className="emptyState">
             Nenhum jogo encontrado. Tente outro nome para encontrar algo mais

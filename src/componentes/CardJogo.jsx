@@ -1,17 +1,19 @@
 import "../CSS/CardJogo.css";
 import { useState } from "react";
-import PopUp from "./PopUp";
+import { Link, useNavigate } from "react-router-dom";
 
 function CardJogo({ jogo }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const navegar = useNavigate();
 
   function favoritar() {
     alert("Favoritado!");
   }
 
   return (
-    <div className="cardJogo" onClick={() => setIsOpen(true)}>
-      <button className="BtnCardJogo">
+    <div className="cardJogo">
+      <button className="BtnCardJogo" onClick={() => navegar("/jogo")}>
         <div className="cardJogo__imagem">
           {jogo.url ? (
             <img src={jogo.url} alt={jogo.nome} />
@@ -28,8 +30,6 @@ function CardJogo({ jogo }) {
           <h2>{jogo.nome}</h2>
         </div>
       </button>
-
-      {/* <PopUp /> */}
     </div>
   );
 }
