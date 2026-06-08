@@ -19,15 +19,24 @@ export default function Cadastro() {
   }
   // ----------------------------------------- //
   // Lidar com o envio do formulário //
-  function handleSubmit(e) {
-    e.preventDefault();
+function handleSubmit(e) {
+  e.preventDefault();
 
-    const errosValidacao = validarFormulario(campos);
-    setErros(errosValidacao);
+  const errosValidacao = validarFormulario(campos);
+  setErros(errosValidacao);
 
-    if (Object.keys(errosValidacao).length > 0) return;
-    alert("Cadastro passou na validação!");
-  }
+  if (Object.keys(errosValidacao).length > 0) return;
+
+  const novoUsuario = {
+    nome: campos.nome,   // <- era dados.nome
+    email: campos.email, // <- era dados.email
+    senha: campos.senha, // <- era dados.senha
+  };
+
+  localStorage.setItem("usuario", JSON.stringify(novoUsuario));
+  localStorage.setItem("logado", "true");
+  alert("Cadastro realizado com sucesso!");
+}
     // ----------------------------------------- //
   return (
     <div className="Cadastro-page">

@@ -7,6 +7,7 @@ import MenuUsuario from "./paginas/MenuUsuario";
 import RodaPe from "./componentes/RodaPe";
 import Jogo from "./paginas/Jogo";
 import Cadastro from "./paginas/Cadastro";
+import Login from "./paginas/Login";
 
 function App() {
   return (
@@ -17,8 +18,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/favoritos" element={<Favoritos />} />
           <Route path="/menuUsuario" element={<MenuUsuario />} />
-          <Route path="/jogo" element={<Jogo />} />
+          <Route path="/jogo/:id" element={<Jogo />} />
           <Route path="/cadastro" element={<Cadastro />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </main>
       <RodaPe />
