@@ -4,7 +4,7 @@ import BarraPesquisa from "./BarraPesquisa";
 import popplayLogo from "../imgs/logo popplay.png";
 
 export default function BarraNav() {
-  let logado = false; //provisório-> simulação de login ou não
+  let logado = true; //provisório-> simulação de login ou não
 
   //Link é utiizado para conectar as paginas dos sites
   return (

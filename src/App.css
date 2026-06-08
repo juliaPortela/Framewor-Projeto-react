@@ -5,5 +5,4 @@
 .divPrincipal {
   display: grid;
   grid-row: 3;
-  justify-content: center;
 }
