@@ -4,9 +4,14 @@ import BarraPesquisa from "./BarraPesquisa";
 import popplayLogo from "../imgs/logo popplay.png";
 
 export default function BarraNav() {
-  let logado = false; //provisório-> simulação de login ou não
+  const navegar = useNavigate();
+  const logado = localStorage.getItem("logado") === "true";
 
-  //Link é utiizado para conectar as paginas dos sites
+  function handleSair() {
+    localStorage.removeItem("logado");
+    navegar("/login");
+  }
+
   return (
     <nav className="barraNav">
       <div className="logoSite">
@@ -26,9 +31,20 @@ export default function BarraNav() {
         </Link>
       </div>
       <div>
-        <Link to={logado ? "/menuUsuario" : "/cadastro"} className="linkNav">
-          <div className="PerfilImg"></div>
-        </Link>
+        {logado ? (
+          <>
+            <Link to="/menuUsuario" className="linkNav">
+              Meu Perfil
+            </Link>
+            <button onClick={handleSair} className="linkNav">
+              Sair
+            </button>
+          </>
+        ) : (
+          <Link to="/login" className="linkNav">
+            Entrar
+          </Link>
+        )}
       </div>
     </nav>
   );

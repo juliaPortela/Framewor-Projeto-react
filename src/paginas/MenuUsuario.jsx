@@ -1,28 +1,40 @@
 import { useState } from "react";
 import { validarMenuUsuario } from "../services/Validacao.js";
-import "../CSS/MenuUsuario.css"; // Lembre-se de ajustar o caminho da pasta CSS se necessário
+import "../CSS/MenuUsuario.css";
 
-export default function MenuUsuario({ usuario }) {
-  const [fotoPerfil, setFotoPerfil] = useState("");
-  const [nomeUsuario, setNomeUsuario] = useState(usuario ? usuario.nome : "");
-  const [email, setEmail] = useState(usuario ? usuario.email : "");
-  const [erros, setErros] = useState({});
+export default function MenuUsuario() {
+  const usuarioSalvo = JSON.parse(localStorage.getItem("usuario")) || {};
 
-  // Função simples para mostrar a imagem que o usuário escolheu
+  const [fotoPerfil, setFotoPerfil] = useState(usuarioSalvo.foto || "");
+  const [nomeUsuario, setNomeUsuario] = useState(usuarioSalvo.nome || "");
+  const [email, setEmail] = useState(usuarioSalvo.email || "");
+
   function handleFotoChange(e) {
     const file = e.target.files[0];
     if (file) {
-      setFotoPerfil(URL.createObjectURL(file));
+      const url = URL.createObjectURL(file);
+      setFotoPerfil(url);
     }
   }
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    const errosValidacao = validarMenuUsuario({ email });
-    setErros(errosValidacao);
-    if (Object.keys(errosValidacao).length > 0) return;
+    const erros = validarMenuUsuario({ email });
 
+    if (Object.keys(erros).length > 0) {
+      alert(erros.email);
+      return;
+    }
+
+    const usuarioAtualizado = {
+      ...usuarioSalvo,
+      nome: nomeUsuario,
+      email: email,
+      foto: fotoPerfil,
+    };
+
+    localStorage.setItem("usuario", JSON.stringify(usuarioAtualizado));
     alert("Alterações salvas com sucesso!");
   }
 
@@ -40,7 +52,6 @@ export default function MenuUsuario({ usuario }) {
                 <div className="fotoPerfil-placeholder">👤</div>
               )}
             </div>
-            {/* O label funciona como um botão e ativa o input escondido abaixo */}
             <label htmlFor="inputFoto" className="btn-escolher-foto">
               Escolher foto
             </label>
@@ -54,15 +65,15 @@ export default function MenuUsuario({ usuario }) {
           </div>
 
           <div className="InputForm">
-            <label htmlFor="nomeUsuário">Nome de Usuário:</label>
+            <label htmlFor="nomeUsuario">Nome de Usuário:</label>
             <input
               type="text"
-              name="nomeUsuário"
+              name="nomeUsuario"
               className="inputPadrao"
               placeholder="Digite seu nome"
               onChange={(e) => setNomeUsuario(e.target.value)}
               value={nomeUsuario}
-            ></input>
+            />
           </div>
 
           <div className="InputForm">
@@ -74,11 +85,10 @@ export default function MenuUsuario({ usuario }) {
               placeholder="Digite seu email"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
-            ></input>
+            />
           </div>
 
           <div className="botoes-acao">
-            {/* O type="button" é essencial aqui para não enviar o form sem querer */}
             <button
               type="button"
               className="btnSecundario"
