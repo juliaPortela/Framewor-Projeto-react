@@ -3,6 +3,7 @@
   border: none;
 }
 .cardJogo {
+  position: relative;
   border-radius: 32px;
   overflow: hidden;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), #ffe1f4);
@@ -38,10 +39,14 @@
   font-size: 3rem;
 }
 
-.overlay {
+.cardOverlay {
   position: absolute;
   top: 18px;
   right: 18px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btnFavoritar {
@@ -55,6 +60,7 @@
   cursor: pointer;
   box-shadow: 0 14px 25px rgba(255, 128, 189, 0.16);
   transition: transform 0.2s ease;
+  pointer-events: auto;
 }
 
 .btnFavoritar:hover {

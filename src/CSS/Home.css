@@ -16,7 +16,7 @@ body,
   padding: 40px 24px 60px;
   color: #4d1a47;
   max-width: 1200px;
-  max-width: 0 auto;
+  margin: 0 auto;
 }
 
 .hero {
