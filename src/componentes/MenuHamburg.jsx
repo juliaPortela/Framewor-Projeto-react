@@ -20,7 +20,7 @@ library.add(fas);
 export default function MenuHamburg() {
   const [aberto, setAberto] = useState(false);
   const navegar = useNavigate();
-  const logado = localStorage.getItem("logado") === "true";
+  const logado = !!localStorage.getItem("token") || localStorage.getItem("logado") === "true";
 
   function mostrarBarra() {
     setAberto(!aberto);
@@ -28,6 +28,8 @@ export default function MenuHamburg() {
 
   // Logout //
   function handleSair() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
     localStorage.removeItem("logado");
     navegar("/login");
   }

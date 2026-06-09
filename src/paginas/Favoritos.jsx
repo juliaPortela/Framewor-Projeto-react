@@ -5,7 +5,9 @@ export default function Favoritos() {
   const [favoritos, setFavoritos] = useState([]);
 
   useEffect(() => {
-    const salvo = JSON.parse(localStorage.getItem("favoritos")) || [];
+    const usuario = JSON.parse(localStorage.getItem("usuario")) || {};
+    const chave = usuario.email ? `favoritos_${usuario.email}` : "favoritos";
+    const salvo = JSON.parse(localStorage.getItem(chave)) || [];
     setFavoritos(salvo);
   }, []);
 

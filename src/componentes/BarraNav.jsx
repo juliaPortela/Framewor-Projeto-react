@@ -12,13 +12,14 @@ import "../CSS/BarraNav.css";
 export default function BarraNav() {
   const navegar = useNavigate();
 
-  const logado = localStorage.getItem("logado") === "true";
-  const usuario = JSON.parse(localStorage.getItem("usuario"));
+  const logado = !!localStorage.getItem("token") || localStorage.getItem("logado") === "true";
   const usuarioSalvo = JSON.parse(localStorage.getItem("usuario"));
 
 
   // Logout //
   function handleSair() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
     localStorage.setItem("logado", "false");
     navegar("/login");
   }

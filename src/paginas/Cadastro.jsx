@@ -28,14 +28,28 @@ function handleSubmit(e) {
   if (Object.keys(errosValidacao).length > 0) return;
 
   const novoUsuario = {
-    nome: campos.nome,   // <- era dados.nome
-    email: campos.email, // <- era dados.email
-    senha: campos.senha, // <- era dados.senha
+    nome: campos.nome,
+    email: campos.email,
+    senha: campos.senha,
   };
 
-  localStorage.setItem("usuario", JSON.stringify(novoUsuario));
-  localStorage.setItem("logado", "true");
-  alert("Cadastro realizado com sucesso!");
+  // enviar para o backend
+  fetch("http://localhost:3001/cadastro", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(novoUsuario),
+  })
+    .then((r) => r.json())
+    .then((data) => {
+      if (data.erro) {
+        alert(data.erro);
+        return;
+      }
+
+      alert("Cadastro realizado com sucesso! Faça login.");
+      window.location.href = "/login";
+    })
+    .catch(() => alert("Erro ao cadastrar usuário."));
 }
     // ----------------------------------------- //
   return (

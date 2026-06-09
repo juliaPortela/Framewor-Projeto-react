@@ -7,14 +7,16 @@ function CardJogo({ jogo }) {
 
   function favoritar(e) {
     e.stopPropagation(); // impede de navegar para a página do jogo ao clicar
+    const usuario = JSON.parse(localStorage.getItem("usuario")) || {};
+    const chave = usuario.email ? `favoritos_${usuario.email}` : "favoritos";
 
-    const favoritosSalvos = JSON.parse(localStorage.getItem("favoritos")) || [];
+    const favoritosSalvos = JSON.parse(localStorage.getItem(chave)) || [];
 
     const jaFavoritado = favoritosSalvos.some((f) => f.id === jogo.id);
 
     if (jaFavoritado) {
       const novosLista = favoritosSalvos.filter((f) => f.id !== jogo.id);
-      localStorage.setItem("favoritos", JSON.stringify(novosLista));
+      localStorage.setItem(chave, JSON.stringify(novosLista));
       alert("Removido dos favoritos!");
     } else {
       favoritosSalvos.push({
@@ -22,7 +24,7 @@ function CardJogo({ jogo }) {
         name: jogo.name,
         background_image: jogo.background_image,
       });
-      localStorage.setItem("favoritos", JSON.stringify(favoritosSalvos));
+      localStorage.setItem(chave, JSON.stringify(favoritosSalvos));
       alert("Favoritado!");
     }
   }

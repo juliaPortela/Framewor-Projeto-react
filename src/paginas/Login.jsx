@@ -14,24 +14,27 @@ export default function Login() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    // chamada ao backend para autenticação via JWT
+    fetch("http://localhost:3001/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: campos.email, senha: campos.senha }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.erro) {
+          setErro(data.erro);
+          return;
+        }
 
-    const usuarioSalvo = JSON.parse(localStorage.getItem("usuario"));
+        // salvar token e usuário localmente
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("usuario", JSON.stringify({ nome: data.nome, email: campos.email }));
+        localStorage.setItem("logado", "true");
 
-    if (!usuarioSalvo) {
-      setErro("Nenhum usuário cadastrado.");
-      return;
-    }
-
-    if (
-      campos.email !== usuarioSalvo.email ||
-      campos.senha !== usuarioSalvo.senha
-    ) {
-      setErro("Email ou senha incorretos.");
-      return;
-    }
-
-    localStorage.setItem("logado", "true");
-    navegar("/");
+        navegar("/");
+      })
+      .catch(() => setErro("Erro ao conectar com o servidor."));
   }
 
   return (
