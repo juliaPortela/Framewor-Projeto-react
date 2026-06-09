@@ -63,6 +63,13 @@ export default function Login() {
           </div>
           {erro && <p className="erro">{erro}</p>}
           <input className="btnPrincipal" type="submit" value="Entrar" />
+
+          <p style={{ textAlign: "center", marginTop: "1rem" }}>
+            Não tem conta?{" "}
+            <a href="/cadastro" style={{ color: "#e91e8c", fontWeight: "bold" }}>
+              Cadastre-se
+            </a>
+          </p>
         </form>
         </div>
     </div>
