@@ -1,19 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { validarMenuUsuario } from "../services/Validacao.js";
 import "../CSS/MenuUsuario.css";
+import { useNavigate } from "react-router-dom";
 
 export default function MenuUsuario() {
-  const usuarioSalvo = JSON.parse(localStorage.getItem("usuario")) || {};
+  const navegar = useNavigate();
 
-  const [fotoPerfil, setFotoPerfil] = useState(usuarioSalvo.foto || "");
-  const [nomeUsuario, setNomeUsuario] = useState(usuarioSalvo.nome || "");
-  const [email, setEmail] = useState(usuarioSalvo.email || "");
+  useEffect(() => {
+    const logado = localStorage.getItem("logado");
+
+    if (logado !== "true") {
+      navegar("/login");
+    }
+  }, [navegar]);
+
+  const usuarioSalvo =
+    JSON.parse(localStorage.getItem("usuario")) || {};
+
+  const [fotoPerfil, setFotoPerfil] = useState(
+    usuarioSalvo.foto || ""
+  );
+
+  const [nomeUsuario, setNomeUsuario] = useState(
+    usuarioSalvo.nome || ""
+  );
+
+  const [email, setEmail] = useState(
+    usuarioSalvo.email || ""
+  );
 
   function handleFotoChange(e) {
     const file = e.target.files[0];
+
     if (file) {
-      const url = URL.createObjectURL(file);
-      setFotoPerfil(url);
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setFotoPerfil(reader.result);
+      };
+
+      reader.readAsDataURL(file);
     }
   }
 
@@ -34,7 +60,11 @@ export default function MenuUsuario() {
       foto: fotoPerfil,
     };
 
-    localStorage.setItem("usuario", JSON.stringify(usuarioAtualizado));
+    localStorage.setItem(
+      "usuario",
+      JSON.stringify(usuarioAtualizado)
+    );
+
     alert("Alterações salvas com sucesso!");
   }
 
@@ -43,18 +73,31 @@ export default function MenuUsuario() {
       <div className="menuUsuario-container">
         <h2>Meu Perfil</h2>
 
-        <form onSubmit={handleSubmit} className="menuUsuario-form">
+        <form
+          onSubmit={handleSubmit}
+          className="menuUsuario-form"
+        >
           <div className="fotoPerfil-section">
             <div className="fotoPerfil-preview">
               {fotoPerfil ? (
-                <img src={fotoPerfil} alt="Perfil do usuário" />
+                <img
+                  src={fotoPerfil}
+                  alt="Perfil do usuário"
+                />
               ) : (
-                <div className="fotoPerfil-placeholder">👤</div>
+                <div className="fotoPerfil-placeholder">
+                  👤
+                </div>
               )}
             </div>
-            <label htmlFor="inputFoto" className="btn-escolher-foto">
+
+            <label
+              htmlFor="inputFoto"
+              className="btn-escolher-foto"
+            >
               Escolher foto
             </label>
+
             <input
               id="inputFoto"
               type="file"
@@ -65,26 +108,36 @@ export default function MenuUsuario() {
           </div>
 
           <div className="InputForm">
-            <label htmlFor="nomeUsuario">Nome de Usuário:</label>
+            <label htmlFor="nomeUsuario">
+              Nome de Usuário:
+            </label>
+
             <input
               type="text"
               name="nomeUsuario"
               className="inputPadrao"
               placeholder="Digite seu nome"
-              onChange={(e) => setNomeUsuario(e.target.value)}
               value={nomeUsuario}
+              onChange={(e) =>
+                setNomeUsuario(e.target.value)
+              }
             />
           </div>
 
           <div className="InputForm">
-            <label htmlFor="emailUsuario">Email:</label>
+            <label htmlFor="emailUsuario">
+              Email:
+            </label>
+
             <input
               type="text"
               name="emailUsuario"
               className="inputPadrao"
               placeholder="Digite seu email"
-              onChange={(e) => setEmail(e.target.value)}
               value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
             />
           </div>
 
@@ -92,11 +145,19 @@ export default function MenuUsuario() {
             <button
               type="button"
               className="btnSecundario"
-              onClick={() => alert("Página de alterar senha em breve!")}
+              onClick={() =>
+                alert(
+                  "Página de alterar senha em breve!"
+                )
+              }
             >
               Alterar senha
             </button>
-            <button type="submit" className="btnPrincipal">
+
+            <button
+              type="submit"
+              className="btnPrincipal"
+            >
               Salvar alterações
             </button>
           </div>
