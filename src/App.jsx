@@ -8,11 +8,17 @@ import RodaPe from "./componentes/RodaPe";
 import Jogo from "./paginas/Jogo";
 import Cadastro from "./paginas/Cadastro";
 import Login from "./paginas/Login";
+import MenuHamburg from "./componentes/MenuHamburg";
 
 function App() {
   return (
     <div className="divPrincipal">
-      <BarraNav />
+      <div className="barraNavs">
+        <BarraNav />
+      </div>
+      <div className="menuHamburg">
+        <MenuHamburg />
+      </div>
       <main className="conteudoMain">
         <Routes>
           <Route path="/" element={<Home />} />

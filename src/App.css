@@ -6,3 +6,16 @@
   display: grid;
   grid-row: 3;
 }
+
+.menuHamburg {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .menuHamburg {
+    display: block;
+  }
+  .barraNavs {
+    display: none;
+  }
+}

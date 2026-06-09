@@ -1,0 +1,119 @@
+/* AJUSTES LAYOU */
+.topo {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px 20px;
+}
+
+.logoSite {
+  display: flex;
+  align-items: center;
+}
+
+.menuHamburgBars {
+  display: flex;
+  align-items: center;
+}
+
+.navBarHamburg {
+  transform: translateX(-100%);
+  transition: 0.3s;
+}
+
+.navBarHamburg.ativo {
+  transform: translateX(0);
+}
+
+/* BOTÃO HAMBURGUER */
+.menuHamburgBars {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 180, 209, 0.6);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #6a2f62;
+  box-shadow: 0 10px 25px rgba(255, 144, 197, 0.2);
+  transition: 0.2s;
+}
+
+.menuHamburgBars:hover {
+  background: white;
+  transform: scale(1.05);
+}
+
+/* MENU LATERAL */
+.navBarHamburg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 260px;
+
+  background: rgba(255, 241, 250, 0.95);
+  backdrop-filter: blur(18px);
+
+  border-right: 1px solid rgba(255, 180, 209, 0.65);
+  box-shadow: 20px 0 60px rgba(255, 144, 197, 0.2);
+
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  padding-right: 40px;
+  gap: 20px;
+
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 999;
+}
+
+/* QUANDO ESTÁ ABERTO */
+.navBarHamburg.ativo {
+  transform: translateX(0);
+}
+
+/* LINKS DO MENU */
+.navBarHamburg .linkNav {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  text-align: left;
+  transition: 0.2s;
+}
+
+.navBarHamburg .linkNav:hover {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 20px rgba(255, 144, 197, 0.2);
+}
+
+/* OVERLAY ESCURO */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s;
+  z-index: 998;
+}
+
+.overlay.ativo {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* RESPONSIVO */
+@media (min-width: 861px) {
+  .menuHamburgBars {
+    display: none;
+  }
+}
