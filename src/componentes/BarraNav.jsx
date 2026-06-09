@@ -14,6 +14,8 @@ export default function BarraNav() {
 
   const logado = localStorage.getItem("logado") === "true";
   const usuario = JSON.parse(localStorage.getItem("usuario"));
+  const usuarioSalvo = JSON.parse(localStorage.getItem("usuario"));
+
 
   // Logout //
   function handleSair() {
@@ -51,23 +53,13 @@ export default function BarraNav() {
       {/* Usuário */}
       <div className="usuarioNav">
         {logado ? (
-          <>
-            <span className="nomeUsuario">
-              Olá, {usuario?.nome}
-            </span>
-
-            <Link to="/menuUsuario" className="linkNav">
-              Meu Perfil
-            </Link>
-
-            <button onClick={handleSair} className="linkNav">
-              Sair
-            </button>
-          </>
+          <div className="navUsuario">
+            <span className="navSaudacao">Olá, {usuarioSalvo?.nome}</span>
+            <Link to="/menuUsuario" className="linkNav">Meu Perfil</Link>
+            <button onClick={handleSair} className="btnSair">Sair</button>
+          </div>
         ) : (
-          <Link to="/login" className="linkNav">
-            Entrar
-          </Link>
+          <Link to="/login" className="linkNav">Entrar</Link>
         )}
       </div>
     </nav>

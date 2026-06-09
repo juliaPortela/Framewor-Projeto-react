@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "../CSS/Jogo.css";
 
 export default function Jogo() {
   const { id } = useParams();
@@ -13,15 +14,12 @@ export default function Jogo() {
     async function buscarJogo() {
       try {
         setCarregando(true);
-
         const [resJogo, resScreenshots] = await Promise.all([
           fetch(`https://api.rawg.io/api/games/${id}?key=${APIKEY}`),
           fetch(`https://api.rawg.io/api/games/${id}/screenshots?key=${APIKEY}`),
         ]);
-
         const dadosJogo = await resJogo.json();
         const dadosScreenshots = await resScreenshots.json();
-
         setJogo(dadosJogo);
         setScreenshots(dadosScreenshots.results || []);
       } catch (error) {
@@ -30,34 +28,40 @@ export default function Jogo() {
         setCarregando(false);
       }
     }
-
     buscarJogo();
   }, [id]);
 
-  if (carregando) return <p>Carregando...</p>;
-  if (!jogo) return <p>Jogo não encontrado.</p>;
+  if (carregando) return <div className="jogo-carregando">Carregando jogo... 🎮</div>;
+  if (!jogo) return <div className="jogo-carregando">Jogo não encontrado.</div>;
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>{jogo.name}</h1>
-      <img
-        src={jogo.background_image}
-        alt={jogo.name}
-        style={{ width: "100%", maxWidth: "600px", borderRadius: "12px" }}
-      />
-      <p>{jogo.description_raw}</p>
+    <div className="jogo-page">
+      <div className="jogo-header">
+        {jogo.background_image && (
+          <img
+            src={jogo.background_image}
+            alt={jogo.name}
+            className="jogo-imagem"
+          />
+        )}
+        <div className="jogo-info">
+          <h1>{jogo.name}</h1>
+        </div>
+      </div>
+
+      {jogo.description_raw && (
+        <div className="jogo-descricao">
+          <h2>Sobre o jogo</h2>
+          <p>{jogo.description_raw}</p>
+        </div>
+      )}
 
       {screenshots.length > 0 && (
-        <div>
+        <div className="jogo-screenshots">
           <h2>Screenshots</h2>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+          <div className="screenshots-grid">
             {screenshots.map((s) => (
-              <img
-                key={s.id}
-                src={s.image}
-                alt="screenshot"
-                style={{ width: "300px", borderRadius: "8px" }}
-              />
+              <img key={s.id} src={s.image} alt="screenshot" />
             ))}
           </div>
         </div>
