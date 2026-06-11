@@ -3,6 +3,8 @@ import { validarFormulario } from "../services/Validacao.js"; // Importando a va
 import "../CSS/Cadastro.css";
 import Modal from "react-modal";
 
+Modal.setAppElement("#root");
+
 export default function Cadastro() {
   // Gerenciamento de estados //
   const [campos, setCampos] = useState({
@@ -12,48 +14,84 @@ export default function Cadastro() {
     confirma: "",
   });
   const [erros, setErros] = useState({});
+  const [modalAberto, setModalAberto] = useState(false);
+  const [tipo, setTipo] = useState("info");
+  const [mensagem, setMensagem] = useState("");
 
   function handleChange(e) {
     const { name, value } = e.target;
     setCampos((prev) => ({ ...prev, [name]: value }));
   }
+
+  function mostrarModal(msg, tipoMsg = "info") {
+    setMensagem(msg);
+    setTipo(tipoMsg);
+    setModalAberto(true);
+
+    setTimeout(() => {
+      setModalAberto(false);
+    }, 3000);
+  }
   // ----------------------------------------- //
   // Lidar com o envio do formulário //
-function handleSubmit(e) {
-  e.preventDefault();
+  function handleSubmit(e) {
+    e.preventDefault();
 
-  const errosValidacao = validarFormulario(campos);
-  setErros(errosValidacao);
+    const errosValidacao = validarFormulario(campos);
+    setErros(errosValidacao);
 
-  if (Object.keys(errosValidacao).length > 0) return;
+    if (Object.keys(errosValidacao).length > 0) return;
 
-  const novoUsuario = {
-    nome: campos.nome,
-    email: campos.email,
-    senha: campos.senha,
+    const novoUsuario = {
+      nome: campos.nome,
+      email: campos.email,
+      senha: campos.senha,
+    };
+
+    // enviar para o backend
+    fetch("http://localhost:3001/cadastro", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(novoUsuario),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.erro) {
+          mostrarModal(data.erro, "error");
+          return;
+        }
+
+        mostrarModal("Cadastro realizado com sucesso! Faça login.", "success");
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 1500);
+      })
+      .catch(() => mostrarModal("Erro ao cadastrar usuário.", "error"));
+  }
+  // ----------------------------------------- //
+  const estiloModal = {
+    content: {},
+  };
+  const icones = {
+    success: "✅",
+    error: "❌",
   };
 
-  // enviar para o backend
-  fetch("http://localhost:3001/cadastro", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(novoUsuario),
-  })
-    .then((r) => r.json())
-    .then((data) => {
-      if (data.erro) {
-        alert(data.erro);
-        return;
-      }
-
-      alert("Cadastro realizado com sucesso! Faça login.");
-      window.location.href = "/login";
-    })
-    .catch(() => alert("Erro ao cadastrar usuário."));
-}
-    // ----------------------------------------- //
   return (
     <div className="Cadastro-page">
+      <Modal
+        isOpen={modalAberto}
+        onRequestClose={() => setModalAberto(false)}
+        closeTimeoutMS={300}
+        className={`modal ${tipo === "success" ? "modal-success" : "modal-error"}`}
+        overlayClassName="modal-overlay"
+      >
+        <div className="modal-conteudo">
+          <span className="modal-icone">{icones[tipo]}</span>
+          <p className="modal-texto">{mensagem}</p>
+        </div>
+      </Modal>
+      
       <div className="Cadastro-container">
         <h2>Cadastro</h2>
         <form onSubmit={handleSubmit} className="Cadastro-form">

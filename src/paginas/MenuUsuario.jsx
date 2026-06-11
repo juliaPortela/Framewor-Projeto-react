@@ -6,6 +6,10 @@ import { useNavigate } from "react-router-dom";
 export default function MenuUsuario() {
   const navegar = useNavigate();
 
+  const [modalAberto, setModalAberto] = useState(false);
+  const [tipo, setTipo] = useState("info"); // 'success' ou 'error'
+  const [mensagem, setMensagem] = useState("");
+
   const usuarioSalvo = JSON.parse(localStorage.getItem("usuario")) || {};
 
   const [fotoPerfil, setFotoPerfil] = useState(usuarioSalvo.foto || "");
@@ -52,38 +56,49 @@ export default function MenuUsuario() {
     }
   }
 
+  function mostrarModal(msg, tipoMsg = "info") {
+    setMensagem(msg);
+    setTipo(tipoMsg);
+    setModalAberto(true);
+
+    // Fecha automaticamente após 3 segundos
+    setTimeout(() => {
+      setModalAberto(false);
+    }, 3000);
+  }
+
   // ✅ Única função handleSubmit: valida, envia ao backend e atualiza localStorage
   function handleSubmit(e) {
     e.preventDefault();
 
     const erros = validarMenuUsuario({ email });
     if (Object.keys(erros).length > 0) {
-      alert(erros.email);
+      mostrarModal(erros.email);
       return;
     }
 
     const token = localStorage.getItem("token");
 
-fetch("http://localhost:3001/perfil", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ nome: nomeUsuario, foto: fotoPerfil }),
-  })
-    .then((r) => {
-      if (!r.ok) throw new Error(`Erro HTTP: ${r.status}`);
-      return r.json();
+    fetch("http://localhost:3001/perfil", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ nome: nomeUsuario, foto: fotoPerfil }),
     })
-    .then((data) => {
-      localStorage.setItem(
-        "usuario",
-        JSON.stringify({ nome: data.nome, foto: data.foto, email })
-      );
-      alert("Alterações salvas com sucesso!");
-    })
-    .catch((err) => alert("Erro ao salvar: " + err.message));
+      .then((r) => {
+        if (!r.ok) throw new Error(`Erro HTTP: ${r.status}`);
+        return r.json();
+      })
+      .then((data) => {
+        localStorage.setItem(
+          "usuario",
+          JSON.stringify({ nome: data.nome, foto: data.foto, email }),
+        );
+        mostrarModal("Alterações salvas com sucesso!");
+      })
+      .catch((err) => mostrarModal("Erro ao salvar: " + err.message));
   }
 
   return (
