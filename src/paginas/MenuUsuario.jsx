@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { validarMenuUsuario } from "../services/Validacao.js";
 import "../CSS/MenuUsuario.css";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 export default function MenuUsuario() {
   const navegar = useNavigate();
@@ -15,6 +18,17 @@ export default function MenuUsuario() {
   const [fotoPerfil, setFotoPerfil] = useState(usuarioSalvo.foto || "");
   const [nomeUsuario, setNomeUsuario] = useState(usuarioSalvo.nome || "");
   const [email, setEmail] = useState(usuarioSalvo.email || "");
+
+  function mostrarModal(msg, tipoMsg = "info") {
+    setMensagem(msg);
+    setTipo(tipoMsg);
+    setModalAberto(true);
+
+    // Fecha automaticamente após 3 segundos
+    setTimeout(() => {
+      setModalAberto(false);
+    }, 3000);
+  }
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -56,24 +70,13 @@ export default function MenuUsuario() {
     }
   }
 
-  function mostrarModal(msg, tipoMsg = "info") {
-    setMensagem(msg);
-    setTipo(tipoMsg);
-    setModalAberto(true);
-
-    // Fecha automaticamente após 3 segundos
-    setTimeout(() => {
-      setModalAberto(false);
-    }, 3000);
-  }
-
   // ✅ Única função handleSubmit: valida, envia ao backend e atualiza localStorage
   function handleSubmit(e) {
     e.preventDefault();
 
     const erros = validarMenuUsuario({ email });
     if (Object.keys(erros).length > 0) {
-      mostrarModal(erros.email);
+      mostrarModal(erros.email, "error");
       return;
     }
 
@@ -96,13 +99,27 @@ export default function MenuUsuario() {
           "usuario",
           JSON.stringify({ nome: data.nome, foto: data.foto, email }),
         );
-        mostrarModal("Alterações salvas com sucesso!");
+        mostrarModal("Alterações salvas com sucesso!", "success");
       })
-      .catch((err) => mostrarModal("Erro ao salvar: " + err.message));
+      .catch((err) => mostrarModal("Erro ao salvar: " + err.message, "error"));
   }
 
   return (
     <div className="menuUsuario-page">
+      <Modal
+        isOpen={modalAberto}
+        onRequestClose={() => setModalAberto(false)}
+        closeTimeoutMS={100}
+        className={`modal ${tipo === "success" ? "modal-success" : "modal-error"}`}
+        overlayClassName="modal-overlay"
+      >
+        <div className="modal-conteudo">
+          <span className="modal-icone">
+            {tipo === "success" ? "✅" : "❌"}
+          </span>
+          <p className="modal-texto">{mensagem}</p>
+        </div>
+      </Modal>
       <div className="menuUsuario-container">
         <h2>Meu Perfil</h2>
 
@@ -154,14 +171,6 @@ export default function MenuUsuario() {
           </div>
 
           <div className="botoes-acao">
-            <button
-              type="button"
-              className="btnSecundario"
-              onClick={() => alert("Página de alterar senha em breve!")}
-            >
-              Alterar senha
-            </button>
-
             <button type="submit" className="btnPrincipal">
               Salvar alterações
             </button>
