@@ -14,7 +14,7 @@ function CardJogo({ jogo }) {
   function mostrarModal(msg, tipoMsg = "info", gifUrl = null) {
     setMensagem(msg);
     setTipo(tipoMsg);
-    setGif(gifUrl); // 👈 importante
+    setGif(gifUrl);
     setModalAberto(true);
 
     setTimeout(() => {
